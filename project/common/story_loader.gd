@@ -69,7 +69,11 @@ func load_simple_story(file_path: String, ignored_paths: Array[String] = []) -> 
 
 
 func _is_valid_story_path(path: String, ignored_paths: Array[String]) -> bool:
-	return not _is_ignored_story_path(path, ignored_paths) and path.ends_with(".gd") and FileAccess.file_exists(path)
+	var file_exists := FileAccess.file_exists(path)
+	var is_gdscript_file := _is_gdscript_file(path)
+	var is_ignored := _is_ignored_story_path(path, ignored_paths)
+
+	return file_exists and is_gdscript_file and not is_ignored
 
 
 func _is_ignored_story_path(path: String, ignored_paths: Array[String]) -> bool:
@@ -78,3 +82,7 @@ func _is_ignored_story_path(path: String, ignored_paths: Array[String]) -> bool:
 			return true
 
 	return false
+
+
+func _is_gdscript_file(path: String) -> bool:
+	return path.ends_with(".gd") or path.ends_with(".gdc")
